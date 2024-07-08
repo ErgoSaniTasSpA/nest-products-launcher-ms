@@ -11,7 +11,7 @@
 5. Ejecuta el comando bajar las imagenes levantadas `docker compose down`
 
 
-### Pasos para crear los Git Submodules
+### Pasos para crear los Git Submodules (Multi-Repo)
 
 1. Crear un nuevo repositorio en GitHub
 2. Clonar el repositorio en la máquina local

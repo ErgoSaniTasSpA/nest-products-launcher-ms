@@ -18,6 +18,12 @@ import { NATS_SERVICE } from 'src/config';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+ /*
+    foo.* matches foo.bar, foo.baz, and so on, but not foo.bar.baz
+    foo.*.bar matches foo.baz.bar, foo.qux.bar, and so on, but not foo.bar or foo.bar.baz
+    foo.> matches foo.bar, foo.bar.baz, and so on
+  */
+
 @Controller('products')
 export class ProductsController {
   constructor(

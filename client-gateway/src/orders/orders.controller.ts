@@ -10,6 +10,12 @@ import { PaginationDto } from 'src/common';
 @Controller('orders')
 export class OrdersController {
 
+   /*
+    foo.* matches foo.bar, foo.baz, and so on, but not foo.bar.baz
+    foo.*.bar matches foo.baz.bar, foo.qux.bar, and so on, but not foo.bar or foo.bar.baz
+    foo.> matches foo.bar, foo.bar.baz, and so on
+  */
+
   constructor(
     @Inject(NATS_SERVICE) private readonly client: ClientProxy,
   ) {}
