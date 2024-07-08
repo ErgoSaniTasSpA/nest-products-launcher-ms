@@ -28,7 +28,7 @@ services:
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
-
+      - DATABASE_URL=${AUTH_DATABASE_URL}
 
   #*******************************************************#
   # * Auth  : MS Auth-ms (Guard y JWT)                    #
@@ -43,9 +43,10 @@ services:
     command: npm run start:dev
     environment:
       - PORT=3004
-      - NATS_SERVERS=nats://nats-server:4222       
+      - NATS_SERVERS=nats://nats-server:4222     
+      - DATABASE_URL=${AUTH_DATABASE_URL}  
+      - JWT_SECRET=${JWT_SECRET}
 
-    
 #*******************************************************#
 # * Order  : MS Products BDD Postgres (Not Https) *     #
 #*******************************************************#
@@ -98,4 +99,4 @@ services:
       - STRIPE_CANCER_URL=${STRIPE_CANCER_URL}
       - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
       - STRIPE_SECRET=${STRIPE_SECRET}
-      - NATS_SERVERS=nats://nats-server:4222
+      - NATS_SERVERS=nats://nats-server:4222      

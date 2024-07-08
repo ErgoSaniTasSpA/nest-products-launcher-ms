@@ -46,3 +46,57 @@ services:
       - NATS_SERVERS=nats://nats-server:4222     
       - DATABASE_URL=${AUTH_DATABASE_URL}  
       - JWT_SECRET=${JWT_SECRET}
+
+#*******************************************************#
+# * Order  : MS Products BDD Postgres (Not Https) *     #
+#*******************************************************#
+  orders-ms:
+    depends_on:
+      - orders-db
+      - nats-server
+    build: ./orders-ms
+    volumes:
+      - ./orders-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3002
+      - DATABASE_URL=postgresql://postgres:123456@orders-db:5432/ordersdb?schema=public
+      - NATS_SERVERS=nats://nats-server:4222
+
+#*******************************************************#
+# * Postgres  : BDD Postgres para Ordenes *                  #
+#*******************************************************#
+  orders-db:
+    container_name: orders_database
+    image: postgres:16.2
+    restart: always
+    volumes:
+      - ./orders-ms/postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=ordersdb
+
+#*******************************************************#
+# * Payments  : MS Payments-ms (Stripe)                      #
+#*******************************************************#
+  payments-ms:
+    depends_on:
+     - nats-server
+    build: ./payments-ms
+    ports:
+      - ${PAYMENTS_MS_PORT}:3003
+    
+    volumes:
+      - ./payments-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - NODE_ENV=${NODE_ENV}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCER_URL=${STRIPE_CANCER_URL}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - NATS_SERVERS=nats://nats-server:4222      
