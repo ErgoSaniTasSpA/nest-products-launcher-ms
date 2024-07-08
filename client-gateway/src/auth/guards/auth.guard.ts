@@ -4,6 +4,13 @@ import { Headers } from 'node-fetch';
 import { NATS_SERVICE } from 'src/config';
 import { ClientProxy } from '@nestjs/microservices';
 
+/*
+* Link
+* - https://docs.nestjs.com/guards
+* - https://docs.nestjs.com/custom-decorators
+*/
+
+
 @Injectable()
 export class AuthGuard implements CanActivate {
 
