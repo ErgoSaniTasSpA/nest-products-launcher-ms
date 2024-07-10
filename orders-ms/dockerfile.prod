@@ -53,7 +53,7 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/node_modules ./node_modules
 
 #Copia el archivo de configuracion de Prisma
-COPY --from=build /usr/src/app/prisma .prisma
+COPY --from=build /usr/src/app/prisma ./prisma
 
 #Copia la carpeta de DIST
 COPY --from=build /usr/src/app/dist ./dist

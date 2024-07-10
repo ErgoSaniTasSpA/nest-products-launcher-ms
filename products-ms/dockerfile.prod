@@ -51,7 +51,7 @@ COPY --from=build /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/dist ./dist
 
 #Copia el archivo de configuracion de Prisma
-COPY --from=build /usr/src/app/prisma .prisma
+COPY --from=build /usr/src/app/prisma ./prisma
 
 
 ENV NODE_ENV=produccion

@@ -67,16 +67,14 @@ services:
   # * Products  : MS products-ms (Stripe)                 #
   #*******************************************************#
   products-ms:
-    depends_on:
-      - nats-server
     build: 
       context: ./products-ms
       dockerfile: dockerfile.prod
     image: products-ms-prod
     environment:
       - PORT=3001
-      - DATABASE_URL='file:./dev.db'
-      - NATS_SERVERS=nats://nats-server:4222      
+      - DATABASE_URL=file:./dev.db
+      - NATS_SERVERS=nats://nats-server:4222
 
 # #*******************************************************#
 # # * Order  : MS Products BDD Postgres (Not Https) *     #
