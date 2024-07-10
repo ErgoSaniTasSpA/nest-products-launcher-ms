@@ -1,0 +1,94 @@
+version: '3'
+
+# Comandos
+# docker compose -f docker-compose.prod.yml build
+#
+
+services:
+
+  #*******************************************************#
+  # * Nast Server : Transports (Servicio de Mensajeria) * #
+  #*******************************************************#
+
+  nats-server:
+    image: nats:latest
+    ports:
+      - "8222:8222"
+    
+#*******************************************************#
+  # * Client Gategay : API Resfull (Https) *            #
+#*******************************************************#
+
+  client-gateway:
+    build: 
+      context: ./client-gateway
+      dockerfile: dockerfile.prod
+    ports:
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}  
+    image: client-gateway-prod  
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+  #*******************************************************#
+  # * Auth  : MS Auth-ms (Guard y JWT)                    #
+  #*******************************************************#
+  
+  auth-ms:
+    build: 
+      context: ./auth-ms
+      dockerfile: dockerfile.prod
+    image: auth-ms-prod
+    environment:
+      - PORT=3004
+      - NATS_SERVERS=nats://nats-server:4222     
+      - DATABASE_URL=${AUTH_DATABASE_URL}  
+      - JWT_SECRET=${JWT_SECRET}
+
+  #*******************************************************#
+  # * Payments  : MS Payments-ms (Stripe)                 #
+  #*******************************************************#
+  payments-ms:
+    build: 
+      context: ./payments-ms
+      dockerfile: dockerfile.prod
+    ports:
+      - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}  
+    image: payments-ms-prod  
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - NODE_ENV=${NODE_ENV}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCER_URL=${STRIPE_CANCER_URL}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - NATS_SERVERS=nats://nats-server:4222        
+
+  #*******************************************************#
+  # * Products  : MS products-ms (Stripe)                 #
+  #*******************************************************#
+  products-ms:
+    depends_on:
+      - nats-server
+    build: 
+      context: ./products-ms
+      dockerfile: dockerfile.prod
+    image: products-ms-prod
+    environment:
+      - PORT=3001
+      - DATABASE_URL='file:./dev.db'
+      - NATS_SERVERS=nats://nats-server:4222      
+
+# #*******************************************************#
+# # * Order  : MS Products BDD Postgres (Not Https) *     #
+# #*******************************************************#
+  orders-ms:
+    build: 
+      context: ./orders-ms
+      dockerfile: dockerfile.prod
+      args:
+        - ORDER_DATABASE_URL=${ORDER_DATABASE}  
+    image: orders-ms-prod  
+    environment:
+      - PORT=3002
+      - DATABASE_URL=${ORDER_DATABASE}
+      - NATS_SERVERS=nats://nats-server:4222
