@@ -25,7 +25,8 @@ services:
       dockerfile: dockerfile.prod
     ports:
       - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}  
-    image: client-gateway-prod  
+    #image: client-gateway-prod 
+    image: northamerica-northeast1-docker.pkg.dev/products-launcher-ms/products-launcher-ms/client-gateway 
     environment:
       - PORT=3000
       - NATS_SERVERS=nats://nats-server:4222
@@ -37,7 +38,8 @@ services:
     build: 
       context: ./auth-ms
       dockerfile: dockerfile.prod
-    image: auth-ms-prod
+    #image: auth-ms-prod
+    image: northamerica-northeast1-docker.pkg.dev/products-launcher-ms/products-launcher-ms/auth-ms
     environment:
       - PORT=3004
       - NATS_SERVERS=nats://nats-server:4222     
@@ -53,7 +55,8 @@ services:
       dockerfile: dockerfile.prod
     ports:
       - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}  
-    image: payments-ms-prod  
+    #image: payments-ms-prod  
+    image: northamerica-northeast1-docker.pkg.dev/products-launcher-ms/products-launcher-ms/payments-ms
     environment:
       - PORT=${PAYMENTS_MS_PORT}
       - NODE_ENV=${NODE_ENV}
@@ -70,7 +73,8 @@ services:
     build: 
       context: ./products-ms
       dockerfile: dockerfile.prod
-    image: products-ms-prod
+    #image: products-ms-prod
+    image: northamerica-northeast1-docker.pkg.dev/products-launcher-ms/products-launcher-ms/products-ms
     environment:
       - PORT=3001
       - DATABASE_URL=file:./dev.db
@@ -85,7 +89,8 @@ services:
       dockerfile: dockerfile.prod
       args:
         - ORDER_DATABASE_URL=${ORDER_DATABASE}  
-    image: orders-ms-prod  
+    #image: orders-ms-prod
+    image: northamerica-northeast1-docker.pkg.dev/products-launcher-ms/products-launcher-ms/orders-ms  
     environment:
       - PORT=3002
       - DATABASE_URL=${ORDER_DATABASE}
